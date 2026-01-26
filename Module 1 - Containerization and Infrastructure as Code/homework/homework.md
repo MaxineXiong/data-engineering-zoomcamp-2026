@@ -10,11 +10,26 @@ Run docker with the `python:3.13` image. Use an entrypoint `bash` to interact wi
 
 What's the version of `pip` in the image?
 
-- **25.3**
+- **25.3** ✔️
 - 24.3.1
 - 24.2.1
 - 23.3.1
 
+<br>
+
+**My Solution**:
+
+The following **2 commands** were executed in the Terminal to figure out the `pip` version:
+
+```bash
+# Create and start a container based on the "python:3.13" image
+docker run -it --rm --entrypoint=bash python:3.13
+
+# Find the pip version when inside the container
+pip --version
+```
+
+<br>
 
 ## Question 2. Understanding Docker networking and docker-compose
 
@@ -56,7 +71,7 @@ volumes:
 - localhost:5432
 - db:5433
 - postgres:5432
-- **db:5432**
+- **db:5432** ✔️
 
 If multiple answers are correct, select any 
 
@@ -80,10 +95,25 @@ wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_z
 For the trips in November 2025 (lpep_pickup_datetime between '2025-11-01' and '2025-12-01', exclusive of the upper bound), how many trips had a `trip_distance` of less than or equal to 1 mile?
 
 - 7,853
-- **8,007**
+- **8,007** ✔️
 - 8,254
 - 8,421
 
+<br>
+
+**My Solution**:
+
+The following SQL query was used in pgAdmin to pull out the number of trips with `trip_distance` less than or equal to 1 mile:
+```sql
+SELECT COUNT(*) AS trip_count
+FROM green_trips
+WHERE 
+    trip_distance <= 1
+    AND lpep_pickup_datetime >= '2025-11-01'
+    AND lpep_pickup_datetime < '2025-12-01';
+```
+
+<br>
 
 ## Question 4. Longest trip for each day
 
@@ -91,21 +121,64 @@ Which was the pick up day with the longest trip distance? Only consider trips wi
 
 Use the pick up time for your calculations.
 
-- **2025-11-14**
+- **2025-11-14** ✔️
 - 2025-11-20
 - 2025-11-23
 - 2025-11-25
 
+<br>
+
+**My Solution**:
+
+The following SQL query was used in pgAdmin:
+
+```sql
+SELECT
+  DATE(lpep_pickup_datetime AS DATE) AS pickup_day,
+  MAX(trip_distance) AS max_trip_distance
+FROM green_trips
+WHERE 
+    trip_distance < 100
+    AND lpep_pickup_datetime >= '2025-11-01'
+    AND lpep_pickup_datetime < '2025-12-01'
+GROUP BY DATE(lpep_pickup_datetime)
+ORDER BY max_trip_distance DESC
+LIMIT 1;
+```
+
+<br>
 
 ## Question 5. Biggest pickup zone
 
 Which was the pickup zone with the largest `total_amount` (sum of all trips) on November 18th, 2025?
 
-- **East Harlem North**
+- **East Harlem North** ✔️
 - East Harlem South
 - Morningside Heights
 - Forest Hills
 
+<br>
+
+**My Solution**:
+
+The following SQL query was used in pgAdmin:
+
+```sql
+SELECT
+  tz.Zone AS pickup_zone,
+  SUM(gt.total_amount) AS total_amount
+FROM green_trips AS gt
+JOIN taxi_zones AS tz
+ON gt.PULocationID = tz.LocationID
+WHERE 
+    gt.lpep_pickup_datetime >= '2025-11-18'
+    AND gt.lpep_pickup_datetime <  '2025-11-19'
+GROUP BY tz.Zone
+ORDER BY total_amount DESC
+LIMIT 1;
+```
+
+<br>
 
 ## Question 6. Largest tip
 
@@ -114,10 +187,34 @@ For the passengers picked up in the zone named "East Harlem North" in November 2
 Note: it's `tip` , not `trip`. We need the name of the zone, not the ID.
 
 - JFK Airport
-- **Yorkville West**
+- **Yorkville West** ✔️
 - East Harlem North
 - LaGuardia Airport
 
+<br>
+
+**My Solution**:
+
+The following SQL query was used in pgAdmin:
+
+```sql
+SELECT
+  dropoff.Zone AS dropoff_zone,
+  gt.tip_amount
+FROM green_trips AS gt
+JOIN taxi_zones AS pickup
+ON gt.PULocationID = pickup.LocationID
+JOIN taxi_zones AS dropoff
+ON gt.DOLocationID = dropoff.LocationID
+WHERE 
+    pickup.Zone = 'East Harlem North'
+    AND gt.lpep_pickup_datetime >= '2025-11-01'
+    AND gt.lpep_pickup_datetime < '2025-12-01'
+ORDER BY gt.tip_amount DESC
+LIMIT 1;
+```
+
+<br>
 
 ## Terraform
 
@@ -141,5 +238,5 @@ Answers:
 - terraform import, terraform apply -y, terraform destroy
 - teraform init, terraform plan -auto-apply, terraform rm
 - terraform init, terraform run -auto-approve, terraform destroy
-- **terraform init, terraform apply -auto-approve, terraform destroy**
+- **terraform init, terraform apply -auto-approve, terraform destroy** ✔️
 - terraform import, terraform apply -y, terraform rm
