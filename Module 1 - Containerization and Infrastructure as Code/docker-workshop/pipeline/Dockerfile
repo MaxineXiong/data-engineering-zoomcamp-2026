@@ -19,7 +19,7 @@ COPY .python-version pyproject.toml uv.lock ./
 RUN uv sync --locked
 
 # Copy the application code to the working directory in container
-COPY pipeline.py ./
+COPY NY_Taxi_Data_Ingestion.py ./
 
 # Set the entry point for the container to run the data pipeline
-ENTRYPOINT ["python", "pipeline.py"]
+ENTRYPOINT ["python", "NY_Taxi_Data_Ingestion.py"]
