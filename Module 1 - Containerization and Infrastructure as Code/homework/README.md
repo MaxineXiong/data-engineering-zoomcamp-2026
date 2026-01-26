@@ -1,6 +1,6 @@
 # Module 1 Homework: Docker & SQL
 
-My solution to the **Module 1 Homework of the** [**Data Engineering Zoomcamp 2026**](https://github.com/DataTalksClub/data-engineering-zoomcamp.git) 
+My solutions to the **Module 1 Homework of the** [**Data Engineering Zoomcamp 2026**](https://github.com/DataTalksClub/data-engineering-zoomcamp.git) 
 by [**DataTalks.Club**](https://datatalks.club/).
 
 
