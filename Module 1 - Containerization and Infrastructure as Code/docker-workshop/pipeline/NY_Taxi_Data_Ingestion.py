@@ -4,7 +4,7 @@ import warnings
 from sqlalchemy import create_engine
 import click
 
-# Define command-line arguments using Click
+# Define command-line argument options using Click
 @click.command()
 @click.option('--year', default=2021, type=int, help='Year of the data')
 @click.option('--month', default=1, type=int, help='Month of the data')

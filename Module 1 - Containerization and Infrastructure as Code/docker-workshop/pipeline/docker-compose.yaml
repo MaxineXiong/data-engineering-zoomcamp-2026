@@ -1,0 +1,59 @@
+services:
+  # 1. The Database Service
+  pg-database:
+    image: postgres:18
+    container_name: pg-database
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=ny_taxi
+    volumes:
+      # CRITICAL FIX: The official image stores data in /var/lib/postgresql/data
+      # I updated this from "/var/lib/postgres" to ensure persistence works.
+      - ny_taxi_postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - pg-network
+
+  # 2. The Ingestion Job
+  ingest-data:
+    image: taxi_ingest:1.0.0
+    container_name: ingest-data
+    # This ensures the DB starts before the script tries to run
+    depends_on:
+      - pg-database
+    networks:
+      - pg-network
+    # These represent the arguments you passed after the image name
+    command: >
+      --pg_username=root
+      --pg_password=root
+      --pg_host=pg-database
+      --pg_port=5432
+      --pg_db=ny_taxi
+      --target_table=yellow_taxi_trips
+
+  # 3. The UI Dashboard
+  pgadmin-ui:
+    image: dpage/pgadmin4
+    container_name: pgadmin-ui
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "8085:80"
+    networks:
+      - pg-network
+
+# Define the shared network
+networks:
+  pg-network:
+    driver: bridge
+
+# Define the named volumes
+volumes:
+  ny_taxi_postgres_data:
+  pgadmin_data:
