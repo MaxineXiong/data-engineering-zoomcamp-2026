@@ -1,5 +1,5 @@
 services:
-  # 1. The Database Service
+  # Postgres Database Service
   pg-database:
     image: postgres:18
     container_name: pg-database
@@ -8,36 +8,30 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=ny_taxi
     volumes:
-      # CRITICAL FIX: The official image stores data in /var/lib/postgresql/data
-      # I updated this from "/var/lib/postgres" to ensure persistence works.
-      - ny_taxi_postgres_data:/var/lib/postgresql/data
+      - ny_taxi_postgres_data:/var/lib/postgres
     ports:
       - "5432:5432"
-    networks:
-      - pg-network
+    # No need to specify network here since all containers in the same docker-compose file share the same default network
 
-  # 2. The Ingestion Job
+  # Data Ingestion Service
   ingest-data:
     image: taxi_ingest:1.0.0
     container_name: ingest-data
-    # This ensures the DB starts before the script tries to run
+    # This ensures the "pg-database" container is started before this one
     depends_on:
       - pg-database
-    networks:
-      - pg-network
-    # These represent the arguments you passed after the image name
-    command: >
-      --pg_username=root
+    command: >   # With '>' we can stack commands vertically
+      --pg_username=root 
       --pg_password=root
       --pg_host=pg-database
       --pg_port=5432
       --pg_db=ny_taxi
       --target_table=yellow_taxi_trips
 
-  # 3. The UI Dashboard
-  pgadmin-ui:
+  # pgAdmin Service
+  pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin-ui
+    container_name: pgadmin
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
       - PGADMIN_DEFAULT_PASSWORD=root
@@ -45,15 +39,8 @@ services:
       - pgadmin_data:/var/lib/pgadmin
     ports:
       - "8085:80"
-    networks:
-      - pg-network
 
-# Define the shared network
-networks:
-  pg-network:
-    driver: bridge
-
-# Define the named volumes
+# Define the named volumes for data persistence
 volumes:
   ny_taxi_postgres_data:
   pgadmin_data:
