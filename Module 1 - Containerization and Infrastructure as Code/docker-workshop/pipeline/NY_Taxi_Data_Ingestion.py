@@ -4,6 +4,7 @@ import warnings
 from sqlalchemy import create_engine
 import click
 
+
 # Define command-line argument options using Click
 @click.command()
 @click.option('--year', default=2021, type=int, help='Year of the data')
@@ -75,6 +76,18 @@ def run(year, month, chunksize, pg_username, pg_password, pg_host, pg_port, pg_d
             if_exists='append',
         )
         print(f'{len(df_chunk)} records inserted.')
+
+
+    # Load taxi zone lookup data
+    df_zones = pd.read_csv('https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv')
+
+    # Insert taxi zone data into a separate table
+    df_zones.to_sql(
+        name='zones',
+        con=engine,
+        if_exists='replace',
+    )
+    print('Taxi zone data inserted.')
 
 
 if __name__ == '__main__':
