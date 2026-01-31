@@ -1,4 +1,4 @@
-# 🐳 Docker for Data Engineering (Lesson 1)
+# 🐳 Lesson 1 - Docker for Data Engineering
 
 This project demonstrates a containerized data ingestion pipeline using **Docker** and **Docker Compose**. It orchestrates a Python data ingestion script, a PostgreSQL database, and the pgAdmin interface to process and analyse the NY Taxi dataset.
 
