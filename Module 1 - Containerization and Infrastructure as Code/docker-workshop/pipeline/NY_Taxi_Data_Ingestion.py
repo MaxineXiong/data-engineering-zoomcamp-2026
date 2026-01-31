@@ -75,7 +75,7 @@ def run(year, month, chunksize, pg_username, pg_password, pg_host, pg_port, pg_d
             con=engine,
             if_exists='append',
         )
-        print(f'{len(df_chunk)} records inserted.')
+        print(f'yellow_taxi_trips: {len(df_chunk)} records inserted.')
 
 
     # Load taxi zone lookup data
@@ -87,7 +87,7 @@ def run(year, month, chunksize, pg_username, pg_password, pg_host, pg_port, pg_d
         con=engine,
         if_exists='replace',
     )
-    print('Taxi zone data inserted.')
+    print(f'zones: {len(df_zones)} records inserted.')
 
 
 if __name__ == '__main__':
