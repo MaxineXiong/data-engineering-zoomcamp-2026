@@ -6,7 +6,7 @@ This project demonstrates a containerized data ingestion pipeline using **Docker
 
 ## 🏗 Architecture
 
-The project consists of three services running in a custom bridge network (`pg-network`):
+The project consists of three services in the same network:
 
 1.  **`pg-database`**: PostgreSQL 18 container (Stores the raw data).
 3.  **`ingest-data`**: Custom Python script for data ingestion (Ingests CSV data into Postgres).
