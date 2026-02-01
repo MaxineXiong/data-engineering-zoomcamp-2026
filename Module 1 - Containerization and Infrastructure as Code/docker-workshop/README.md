@@ -12,6 +12,8 @@ The project consists of three services (or containers) in the same network:
 3.  **`ingest-data`**: Custom Python script for data ingestion (Ingests CSV data into Postgres).
 2.  **`pgadmin`**: pgAdmin4 Web UI (For complex queries and data management).
 
+[docker-architecture](../assets/docker-architecture.png)
+
 ## 🛠 Tech Stack
 * **Docker & Docker Compose**: Orchestration and Containerization.
 * **uv**: Modern Python package manager for fast dependency resolution.
