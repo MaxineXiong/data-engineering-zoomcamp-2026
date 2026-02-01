@@ -16,6 +16,10 @@ services:
   # Data Ingestion Service
   ingest-data:
     image: taxi_ingest:1.0.0
+    # Build the custom image from the Dockerfile in the current directory
+    build:
+      context: ./
+      dockerfile: Dockerfile
     container_name: ingest-data
     # This ensures the "pg-database" container is started before this one
     depends_on:
