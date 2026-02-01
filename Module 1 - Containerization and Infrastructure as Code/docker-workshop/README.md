@@ -6,13 +6,13 @@ This project demonstrates a containerized data ingestion pipeline using **Docker
 
 ## 🏗 Architecture
 
+![Docker Workshop Architecture Diagram](../assets/docker-architecture.png)
+
 The project consists of three services (or containers) in the same network:
 
 1.  **`pg-database`**: PostgreSQL 18 container (Stores the raw data).
 3.  **`ingest-data`**: Custom Python script for data ingestion (Ingests CSV data into Postgres).
 2.  **`pgadmin`**: pgAdmin4 Web UI (For complex queries and data management).
-
-[docker-architecture](../assets/docker-architecture.png)
 
 ## 🛠 Tech Stack
 * **Docker & Docker Compose**: Orchestration and Containerization.
