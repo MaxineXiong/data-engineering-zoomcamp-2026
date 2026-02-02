@@ -9,7 +9,7 @@
 - 364.7 MiB
 - 692.6 MiB
 
-**Explanation**
+**My Solution:**
 
 The file size is taken from the execution metrics of the `extract` task in Kestra.
 
@@ -19,7 +19,6 @@ This was obtained by running the flow **`08_gcp_taxi.yaml`** with the following 
 - month = `12`
 
 After the execution finished, I checked the Metrics tab of the run. The upload_to_gcs task reports the size of the uncompressed CSV file in bytes: 134,481,400 bytes
-![Yellow taxi 2020-12 CSV file size](../../images/02_q1_yellow_2020_12_file_size.png)
 
 
 Converting bytes to MiB:
@@ -32,7 +31,7 @@ Converting bytes to MiB:
 - `green_tripdata_04_2020.csv`
 - `green_tripdata_2020.csv`
 
-**Solution**
+**My Solution:**
 The file variable is defined using Kestra template expressions and is rendered at runtime by replacing each placeholder with the corresponding input value:
 - inputs.taxi → green
 - inputs.year → 2020
@@ -51,7 +50,7 @@ Each external table points directly to a monthly CSV file stored in Google Cloud
 - 18,324,219
 - 29,430,127
 
-**Solution**
+**My Solution:**
 ```sql
 SELECT COUNT(*) AS total_rows
 FROM (
@@ -87,7 +86,7 @@ FROM (
 - 1,734,051 ✔️
 - 1,342,034
 
-**Solution**
+**My Solution:**
 ```sql
 SELECT COUNT(*) AS total_rows
 FROM (
@@ -131,7 +130,7 @@ This approach ensures the counts reflect the raw CSV data exactly, rather than t
 - 1,925,152 ✔️
 - 2,561,031
 
-**Solution**
+**My Solution:**
 ```sql
 SELECT COUNT(*) AS total_rows
 FROM `zoomcamp.yellow_tripdata_2021_03_ext`;
@@ -143,7 +142,7 @@ FROM `zoomcamp.yellow_tripdata_2021_03_ext`;
 - Add a `timezone` property set to `UTC-5` in the `Schedule` trigger configuration
 - Add a `location` property set to `New_York` in the `Schedule` trigger configuration  
 
-**Explanation**
+**My Solution:**
 
 Kestra schedule triggers run in UTC by default.
 To align executions with New York local time, the timezone must be explicitly configured.
