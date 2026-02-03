@@ -15,8 +15,7 @@ import click
 @click.option('--pg_host', default='localhost', type=str, help='PostgreSQL host')
 @click.option('--pg_port', default=5432, type=int, help='PostgreSQL port')
 @click.option('--pg_db', default='ny_taxi', type=str, help='PostgreSQL database name')
-@click.option('--target_table', default='yellow_taxi_data', type=str, help='Target table name in the database')
-def run(year, month, chunksize, pg_username, pg_password, pg_host, pg_port, pg_db, target_table):
+def run(year, month, chunksize, pg_username, pg_password, pg_host, pg_port, pg_db):
     """Ingest NY Taxi data into PostgreSQL database in chunks."""
     dtype = {
         "VendorID": "Int64",
@@ -63,7 +62,7 @@ def run(year, month, chunksize, pg_username, pg_password, pg_host, pg_port, pg_d
 
     # Create a table with headers only but no data
     df_chunks[0].head(0).to_sql(
-        name=target_table,
+        name='yellow_taxi_trips',
         con=engine,                 # Use the engine to connect to DB
         if_exists='replace',
     )
@@ -71,7 +70,7 @@ def run(year, month, chunksize, pg_username, pg_password, pg_host, pg_port, pg_d
     # Insert data chunk by chunk
     for df_chunk in df_chunks:
         df_chunk.to_sql(
-            name=target_table,
+            name='yellow_taxi_trips',
             con=engine,
             if_exists='append',
         )

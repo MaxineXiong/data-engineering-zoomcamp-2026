@@ -30,7 +30,6 @@ services:
       --pg_host=pg-database
       --pg_port=5432
       --pg_db=ny_taxi
-      --target_table=yellow_taxi_trips
 
   # pgAdmin Service
   pgadmin:
