@@ -1,6 +1,7 @@
 *.pptx.lnk
 test/
 *.parquet
+*.csv
 
 
 # Byte-compiled / optimized / DLL files

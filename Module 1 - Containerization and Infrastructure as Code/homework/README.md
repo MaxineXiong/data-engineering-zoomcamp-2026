@@ -29,7 +29,11 @@ docker run -it --rm --entrypoint=bash python:3.13
 pip --version
 ```
 
-<br>
+Output result:
+```bash
+pip 25.3 from /usr/local/lib/python3.13/site-packages/pip (python 3.13)
+```
+
 
 ## Question 2. Understanding Docker networking and docker-compose
 
@@ -78,17 +82,50 @@ If multiple answers are correct, select any
 
 ## Prepare the Data
 
-Download the green taxi trips data for November 2025:
+The green taxi trips data for November 2025 can be downloaded here:
 
 ```bash
 wget https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-11.parquet
 ```
 
-You will also need the dataset with zones:
+Zone data can be downloaded here:
 
 ```bash
 wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv
 ```
+
+**Step 1: Create virtual environment with `uv`.**
+
+The folder was initiated with the `uv` package, which automatically handles virtual environment.
+
+```bash
+# Initialise the folder with python>=3.13
+uv init --python=3.13
+```
+
+**Step 2: Create a Python script for data ingestion.**
+
+Add the dependencies required for running the script:
+```bash
+uv add pandas pyarrow sqlalchemy psycopg2-binary click
+```
+
+Create a Python script for the ingestion of both datasets: [**ingest_data.py**](./ingest_data.py).
+
+**Step 3: Create a [Dockerfile](./Dockerfile) for the custom Docker image of the data ingestion script.**
+
+
+**Step 4: Create [docker-compose.yaml](./docker-compose.yaml) for orchestrating multiple services to run together in the same network.**
+
+
+**Step 5: Run all three containers (incl. PostgreSQL database, data ingestion script, and pgAdmin) by executing the command below.**
+
+```bash
+docker-compose up
+```
+
+**Step 6: Log into pgAdmin and query from the database.**
+
 
 ## Question 3. Counting short trips
 
@@ -106,11 +143,11 @@ For the trips in November 2025 (lpep_pickup_datetime between '2025-11-01' and '2
 The following SQL query was used in pgAdmin to pull out the number of trips with `trip_distance` less than or equal to 1 mile:
 ```sql
 SELECT COUNT(*) AS trip_count
-FROM green_trips
+FROM green_taxi_trips
 WHERE 
-    trip_distance <= 1
-    AND lpep_pickup_datetime >= '2025-11-01'
-    AND lpep_pickup_datetime < '2025-12-01';
+	trip_distance <= 1
+	AND lpep_pickup_datetime >= '2025-11-01'
+	AND lpep_pickup_datetime < '2025-12-01';
 ```
 
 <br>
@@ -133,14 +170,11 @@ Use the pick up time for your calculations.
 The following SQL query was used in pgAdmin:
 
 ```sql
-SELECT
-  DATE(lpep_pickup_datetime AS DATE) AS pickup_day,
-  MAX(trip_distance) AS max_trip_distance
-FROM green_trips
-WHERE 
-    trip_distance < 100
-    AND lpep_pickup_datetime >= '2025-11-01'
-    AND lpep_pickup_datetime < '2025-12-01'
+SELECT 
+	DATE(lpep_pickup_datetime) AS pickup_day,
+	MAX(trip_distance) AS max_trip_distance
+FROM green_taxi_trips
+WHERE trip_distance < 100
 GROUP BY DATE(lpep_pickup_datetime)
 ORDER BY max_trip_distance DESC
 LIMIT 1;
@@ -165,15 +199,13 @@ The following SQL query was used in pgAdmin:
 
 ```sql
 SELECT
-  tz.Zone AS pickup_zone,
-  SUM(gt.total_amount) AS total_amount
-FROM green_trips AS gt
-JOIN taxi_zones AS tz
-ON gt.PULocationID = tz.LocationID
-WHERE 
-    gt.lpep_pickup_datetime >= '2025-11-18'
-    AND gt.lpep_pickup_datetime <  '2025-11-19'
-GROUP BY tz.Zone
+	z."Zone" AS pickup_zone,
+	SUM(total_amount) AS total_amount
+FROM green_taxi_trips AS gt
+JOIN zones AS z
+ON gt."PULocationID" = z."LocationID"
+WHERE DATE(lpep_pickup_datetime) = '2025-11-18'
+GROUP BY z."Zone"
 ORDER BY total_amount DESC
 LIMIT 1;
 ```
@@ -199,17 +231,17 @@ The following SQL query was used in pgAdmin:
 
 ```sql
 SELECT
-  dropoff.Zone AS dropoff_zone,
-  gt.tip_amount
-FROM green_trips AS gt
-JOIN taxi_zones AS pickup
-ON gt.PULocationID = pickup.LocationID
-JOIN taxi_zones AS dropoff
-ON gt.DOLocationID = dropoff.LocationID
+	dz."Zone" AS dropoff_zone,
+	gt.tip_amount
+FROM green_taxi_trips AS gt
+JOIN zones AS pz
+ON gt."PULocationID" = pz."LocationID"
+JOIN zones AS dz
+ON gt."DOLocationID" = dz."LocationID"
 WHERE 
-    pickup.Zone = 'East Harlem North'
-    AND gt.lpep_pickup_datetime >= '2025-11-01'
-    AND gt.lpep_pickup_datetime < '2025-12-01'
+	pz."Zone" = 'East Harlem North'
+	AND EXTRACT(YEAR FROM gt.lpep_pickup_datetime) = 2025
+	AND EXTRACT(MONTH FROM gt.lpep_pickup_datetime) = 11
 ORDER BY gt.tip_amount DESC
 LIMIT 1;
 ```
