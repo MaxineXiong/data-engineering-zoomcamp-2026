@@ -2,6 +2,7 @@
 test/
 *.parquet
 *.csv
+*cred*.json
 
 
 # Byte-compiled / optimized / DLL files
