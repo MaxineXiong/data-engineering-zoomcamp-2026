@@ -13,6 +13,8 @@ services:
 
   ingest-data:
     image: taxi_ingest_green:1.0.0
+    # Build the image from the Dockerfile in the current directory
+      # and use all files in the current directory as the build context
     build:
       context: ./
       dockerfile: Dockerfile
