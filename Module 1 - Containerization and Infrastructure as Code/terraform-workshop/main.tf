@@ -3,7 +3,7 @@
 terraform {
   required_providers {
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
       version = "7.18.0"
     }
   }
@@ -11,9 +11,9 @@ terraform {
 
 provider "google" {
   # Configuration options
-  credentials = "./keys/gcp_credentials.json"
-  project     = "ny-taxi-de-zoomcamp-486111"
-  region      = "us-central1"
+  credentials = var.credentials
+  project     = var.project_id
+  region      = var.region
 }
 
 
@@ -22,13 +22,14 @@ provider "google" {
 # Define a resource for GCS bucket: https://registry.terraform.io/providers/hashicorp/google/4.35.0/docs/resources/storage_bucket#example-usage---life-cycle-settings-for-storage-bucket-objects
 # Define the GCS bucket "google_storage_bucket.terraform_demo_bucket"
 resource "google_storage_bucket" "terraform_demo_bucket" {
-  name          = "ny-taxi-de-zoomcamp-486111-terraform-demo-bucket"   # resource name has to be globally unique
-  location      = "US"
+  name          = var.gcs_bucket_name # bucket name has to be globally unique
+  location      = var.location
   force_destroy = true
+  storage_class = var.gcs_storage_class
 
   lifecycle_rule {
     condition {
-      age = 3      # Age in days
+      age = 3 # Age in days
     }
     action {
       type = "Delete"
@@ -40,9 +41,14 @@ resource "google_storage_bucket" "terraform_demo_bucket" {
       age = 1
     }
     action {
-      type = "AbortIncompleteMultipartUpload"   # Abort incomplete multipart (partition) uploads after 1 day
+      type = "AbortIncompleteMultipartUpload" # Abort incomplete multipart (partition) uploads after 1 day
     }
   }
 }
 
-
+# Define a resource for BigQuery dataset: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset#example-usage---bigquery-dataset-basic
+# Define the BigQuery dataset "google_bigquery_dataset.terraform_demo_dataset"
+resource "google_bigquery_dataset" "terraform_demo_dataset" {
+  dataset_id = var.bigquery_dataset_id
+  location   = var.location
+}
