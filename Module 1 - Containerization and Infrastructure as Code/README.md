@@ -2,7 +2,7 @@
 
 This repository contains my learning materials and exercises for [Module 1 of the Data Engineering Zoomcamp 2026](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/01-docker-terraform) by [DataTalks.Club](https://datatalks.club/).
 
-In this module, I learned how to containerize data pipelines using Docker and provision infrastructure on Google Cloud Platform (GCP) using Terraform.
+In this module, I learned how to containerize data pipelines using **Docker** and provision infrastructure on **Google Cloud Platform (GCP)** using **Terraform**.
 
 ## 📂 Project Structure
 
