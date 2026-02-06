@@ -4,7 +4,7 @@ This repository contains my learning materials and exercises for [Module 1 of th
 
 In this module, I learned how to containerize data pipelines using **Docker** and provision infrastructure on **Google Cloud Platform (GCP)** using **Terraform**.
 
-View my **learning notes** [here](https://www.notion.so/DE-Zoomcamp-2ed7e1378ad2801ebecad95626440112#2f17e1378ad28025b8b1ce19edb22bf3).
+> 📘 **Study Notes:** Check out my detailed learning notes on [here](https://www.notion.so/DE-Zoomcamp-2ed7e1378ad2801ebecad95626440112?source=copy_link).
 
 ## 📂 Project Structure
 
