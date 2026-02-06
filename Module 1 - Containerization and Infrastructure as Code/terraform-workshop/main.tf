@@ -16,6 +16,22 @@ provider "google" {
   region      = var.region
 }
 
+# This data source gets a temporary token for the service account
+ data "google_service_account_access_token" "default" {
+   provider               = google
+   target_service_account = "terraform-runner@ny-taxi-de-zoomcamp-486111.iam.gserviceaccount.com"
+   scopes                 = ["https://www.googleapis.com/auth/cloud-platform"]
+   lifetime               = "3600s"
+ }
+ 
+ # This second provider block uses that temporary token and does the real work
+ provider "google" {
+   alias        = "impersonated"
+   access_token = data.google_service_account_access_token.default.access_token
+   project      = var.project_id
+   region       = var.region
+ }
+
 
 ##########################  Define Resources  #########################################
 
