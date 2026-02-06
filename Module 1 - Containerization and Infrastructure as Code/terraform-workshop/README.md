@@ -2,6 +2,8 @@
 
 This folder contains the Infrastructure as Code (IaC) configuration to provision Google Cloud Platform (GCP) resources using Terraform.
 
+> 📘 **Study Notes:** Check out my detailed learning notes on [here](https://www.notion.so/DE-Zoomcamp-2ed7e1378ad2801ebecad95626440112?source=copy_link).
+
 ## 📂 Project Structure
 
 * **`main.tf`**: The primary configuration file where resources (Buckets, BigQuery datasets, etc.) are defined.
