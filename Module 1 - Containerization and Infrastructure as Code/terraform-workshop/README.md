@@ -1,4 +1,4 @@
-# Terraform Workshop ☁️
+# Lesson 2 - Terraform Workshop ☁️
 
 This folder contains the Infrastructure as Code (IaC) configuration to provision Google Cloud Platform (GCP) resources using Terraform.
 
