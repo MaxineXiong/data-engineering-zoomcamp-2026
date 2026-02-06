@@ -273,6 +273,6 @@ Answers:
 - **terraform init, terraform apply -auto-approve, terraform destroy** ✔️
 - terraform import, terraform apply -y, terraform rm
 
-**My solution**: [Terraform Project](../terraform_workshop)
+**My solution**: [Terraform Project](../terraform-workshop)
 
 <br>
