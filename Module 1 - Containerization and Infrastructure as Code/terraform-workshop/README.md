@@ -16,11 +16,10 @@ Before running the code, you must set up your Google Cloud environment.
 2.  Navigate to **IAM & Admin** > **Service Accounts**.
 3.  Click **Create Service Account** and provide a name (e.g., `terraform-runner`).
 4.  **Grant Permissions:** Assign the following roles to the service account:
+    * `Storage Admin`
     * `BigQuery Admin`
     * `Compute Admin`
     * `Service Account Token Creator`
-    * `Storage Admin`
-5.  Click **Done**.
 
 ### 2. Download Credentials
 1.  Click on the newly created service account.
