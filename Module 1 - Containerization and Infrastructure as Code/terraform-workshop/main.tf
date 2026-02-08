@@ -19,7 +19,7 @@ provider "google" {
 # This data source gets a temporary token for the service account
  data "google_service_account_access_token" "default" {
    provider               = google
-   target_service_account = "terraform-runner@ny-taxi-de-zoomcamp-486111.iam.gserviceaccount.com"
+   target_service_account = var.service_account_email
    scopes                 = ["https://www.googleapis.com/auth/cloud-platform"]
    lifetime               = "3600s"
  }

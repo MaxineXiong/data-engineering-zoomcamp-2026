@@ -8,6 +8,11 @@ variable "credentials" {
   default     = "./keys/gcp_credentials.json"
 }
 
+variable "service_account_email" {
+  description = "The auto-created email of the GCP service account"
+  default     = "terraform-runner@ny-taxi-de-zoomcamp-486111.iam.gserviceaccount.com"
+}
+
 variable "project_id" {
   description = "The GCP project ID"
   default     = "ny-taxi-de-zoomcamp-486111"
