@@ -15,8 +15,8 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy dependency files first to the working directory in container
 COPY .python-version pyproject.toml uv.lock ./
-# Install dependencies from the "uv.lock" file
-RUN uv sync --locked
+# Synchronize the installed dependencies from the "uv.lock" file
+RUN uv sync --locked --no-install-project
 
 # Copy the application code to the working directory in container
 COPY NY_Taxi_Data_Ingestion.py ./
